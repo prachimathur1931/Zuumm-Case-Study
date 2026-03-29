@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Zuumm.ai — UX Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --primary:     #FF3951;
+  --primary-soft:#FEEBEE;
+  --navy:        #1E3A8A;
+  --navy-soft:   #EEF2FF;
+  --violet:      #5530F9;
+  --grad-1: linear-gradient(135deg, #FF3951 0%, #5530F9 100%);
+  --grad-2: linear-gradient(135deg, #FEEBEE 0%, #F2EBFA 100%);
+  --ink:         #0D0D0D;
+  --ink-muted:   #5C5C6E;
+  --ink-faint:   #9B9BAD;
+  --surface:     #FFFFFF;
+  --surface-2:   #F8F8FB;
+  --surface-3:   #F2F2F7;
+  --border:      rgba(30,58,138,0.09);
+  --border-md:   rgba(30,58,138,0.16);
+  --border-dark: rgba(30,58,138,0.24);
+  --sans:  'DM Sans', sans-serif;
+  --serif: 'DM Serif Display', Georgia, serif;
+  --r: 10px; --rl: 16px; --rxl: 24px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.72;
+  -webkit-font-smoothing: antialiased;
+}
+
+#prog-wrap { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 200; }
+#prog-bar { height: 100%; width: 0%; background: var(--grad-1); transition: width 0.08s linear; }
+
+nav {
+  position: fixed; top: 3px; left: 0; right: 0; z-index: 100;
+  height: 56px; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 clamp(1.5rem, 5vw, 4rem);
+  background: rgba(255,255,255,0.94);
+  backdrop-filter: blur(14px);
+  border-bottom: 0.5px solid var(--border-md);
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 9px;
+  text-decoration: none; color: var(--ink);
+  font-size: 13px; font-weight: 500;
+}
+.nav-mark {
+  width: 26px; height: 26px; border-radius: 7px;
+  background: var(--grad-1);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 12px; font-weight: 700; letter-spacing: -0.03em;
+}
+.nav-links { display: flex; gap: 1.75rem; list-style: none; }
+.nav-links a {
+  font-size: 11px; font-weight: 400; color: var(--ink-muted);
+  text-decoration: none; letter-spacing: 0.07em; text-transform: uppercase;
+  transition: color 0.18s;
+}
+.nav-links a:hover { color: var(--primary); }
+@media (max-width: 680px) { .nav-links { display: none; } }
+
+.container { max-width: 860px; margin: 0 auto; padding: 0 clamp(1.5rem, 5vw, 3rem); }
+section { padding: 88px 0; }
+.bg-soft { background: var(--surface-2); }
+
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--primary); margin-bottom: 0.6rem;
+}
+.eyebrow::before {
+  content: ''; display: block; width: 20px; height: 2px;
+  background: var(--grad-1); border-radius: 2px;
+}
+
+h2.st {
+  font-family: var(--serif);
+  font-size: clamp(1.7rem, 3.2vw, 2.35rem);
+  font-weight: 400; line-height: 1.18;
+  letter-spacing: -0.018em; color: var(--ink);
+  margin-bottom: 1.4rem;
+}
+h2.st em { font-style: italic; color: var(--primary); }
+h2.st .navy { color: var(--navy); }
+
+.body-text { font-size: 15.5px; color: var(--ink-muted); line-height: 1.8; }
+.body-text p + p { margin-top: 1rem; }
+.body-text strong { color: var(--ink); font-weight: 500; }
+
+.callout {
+  background: var(--grad-2);
+  border-left: 3px solid var(--primary);
+  border-radius: 0 var(--r) var(--r) 0;
+  padding: 1.25rem 1.5rem; margin: 2rem 0;
+  border-top: 0.5px solid rgba(255,57,81,0.15);
+  border-right: 0.5px solid rgba(85,48,249,0.10);
+  border-bottom: 0.5px solid rgba(85,48,249,0.10);
+}
+.callout p { font-family: var(--serif); font-size: 1.12rem; font-style: italic; color: var(--ink); line-height: 1.65; }
+
+.meta-strip {
+  display: flex; flex-wrap: wrap; gap: 1.5rem;
+  padding: 1.4rem; background: var(--surface-3);
+  border-radius: var(--rl); border: 0.5px solid var(--border-md);
+  margin-top: 2rem;
+}
+.meta-chip { display: flex; flex-direction: column; gap: 3px; }
+.meta-chip .lbl { font-size: 10px; font-weight: 500; letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-faint); }
+.meta-chip .val { font-size: 13px; color: var(--ink); }
+.meta-div { width: 1px; background: var(--border-dark); align-self: stretch; }
+
+.hero { padding-top: 136px; padding-bottom: 72px; border-bottom: 0.5px solid var(--border-md); }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--navy);
+  background: var(--navy-soft); padding: 5px 12px;
+  border-radius: 30px; margin-bottom: 1.75rem;
+}
+.hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--grad-1); display: block; }
+h1.ht {
+  font-family: var(--serif);
+  font-size: clamp(2.5rem, 5.5vw, 4rem);
+  font-weight: 400; line-height: 1.10;
+  letter-spacing: -0.025em; color: var(--ink);
+  margin-bottom: 1.5rem; max-width: 760px;
+}
+h1.ht em { font-style: italic; color: var(--primary); }
+.hero-sub { font-size: 17px; color: var(--ink-muted); max-width: 540px; line-height: 1.72; margin-bottom: 2rem; }
+.grad-rule { height: 3px; border-radius: 3px; background: var(--grad-1); width: 48px; margin-bottom: 1.75rem; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 1.75rem; }
+.three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; margin-top: 1.75rem; }
+.four-col { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.1rem; margin-top: 1.75rem; }
+@media (max-width: 660px) {
+  .two-col, .three-col { grid-template-columns: 1fr; }
+  .four-col { grid-template-columns: 1fr 1fr; }
+}
+
+.card { background: var(--surface); border: 0.5px solid var(--border-md); border-radius: var(--rl); padding: 1.5rem; }
+.card.ct-primary { border-top: 3px solid var(--primary); }
+.card.ct-navy    { border-top: 3px solid var(--navy); }
+.card.ct-violet  { border-top: 3px solid var(--violet); }
+.card h3 { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 0.45rem; }
+.card p  { font-size: 13.5px; color: var(--ink-muted); line-height: 1.65; }
+
+.ig { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+@media (max-width: 580px) { .ig { grid-template-columns: 1fr; } }
+.insight { background: var(--surface); border: 0.5px solid var(--border-md); border-radius: var(--r); padding: 1.25rem; display: flex; gap: 0.9rem; align-items: flex-start; }
+.i-icon { width: 30px; height: 30px; border-radius: 7px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.insight p { font-size: 13px; color: var(--ink-muted); line-height: 1.62; }
+.insight p strong { color: var(--ink); font-weight: 500; }
+
+.persona { background: var(--surface); border: 0.5px solid var(--border-md); border-radius: var(--rl); padding: 1.5rem; position: relative; overflow: hidden; }
+.persona::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+.persona.p1::before { background: var(--primary); }
+.persona.p2::before { background: var(--navy); }
+.persona.p3::before { background: var(--violet); }
+.pa { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; margin-bottom: 0.75rem; }
+.p1 .pa { background: var(--primary-soft); color: var(--primary); }
+.p2 .pa { background: var(--navy-soft); color: var(--navy); }
+.p3 .pa { background: #EDEBFF; color: var(--violet); }
+.persona h3 { font-size: 14.5px; font-weight: 500; color: var(--ink); margin-bottom: 2px; }
+.p-role { font-size: 11.5px; color: var(--ink-faint); margin-bottom: 0.9rem; }
+.p-quote { font-size: 12.5px; color: var(--ink-muted); font-style: italic; line-height: 1.6; margin-bottom: 0.85rem; }
+.ptag { display: inline-block; font-size: 10.5px; padding: 3px 9px; border-radius: 20px; margin: 2px 2px 2px 0; }
+.p1 .ptag { background: var(--primary-soft); color: var(--primary); }
+.p2 .ptag { background: var(--navy-soft); color: var(--navy); }
+.p3 .ptag { background: #EDEBFF; color: var(--violet); }
+
+.steps { display: flex; flex-direction: column; margin-top: 1.75rem; position: relative; }
+.steps::before { content: ''; position: absolute; left: 17px; top: 10px; bottom: 10px; width: 1px; background: var(--border-dark); z-index: 0; }
+.step { display: flex; gap: 1.15rem; align-items: flex-start; padding: 1.1rem 0; position: relative; z-index: 1; }
+.sn { width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11.5px; font-weight: 500; background: var(--surface); border: 0.5px solid var(--border-dark); color: var(--ink); }
+.step.active .sn { background: var(--grad-1); color: #fff; border: none; }
+.sc h3 { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 0.28rem; }
+.sc p { font-size: 13px; color: var(--ink-muted); line-height: 1.65; }
+
+.ia-wrap { background: var(--surface); border: 0.5px solid var(--border-md); border-radius: var(--rl); padding: 1.5rem; }
+.ia-root { background: var(--grad-1); color: #fff; border-radius: var(--r); padding: 0.55rem 1.2rem; font-size: 13px; font-weight: 500; display: inline-block; }
+.ia-branch { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.ia-c { width: 1px; height: 18px; background: var(--border-dark); }
+.ia-node { padding: 0.45rem 0.85rem; border-radius: var(--r); font-size: 11.5px; font-weight: 500; text-align: center; border: 0.5px solid; }
+.ia-node.c-p { background: var(--primary-soft); color: var(--primary); border-color: rgba(255,57,81,0.2); }
+.ia-node.c-n { background: var(--navy-soft); color: var(--navy); border-color: rgba(30,58,138,0.2); }
+.ia-node.c-v { background: #EDEBFF; color: var(--violet); border-color: rgba(85,48,249,0.2); }
+.ia-leaf { font-size: 11px; color: var(--ink-muted); border: 0.5px solid var(--border-md); background: var(--surface-2); padding: 0.35rem 0.75rem; border-radius: 6px; text-align: center; }
+.ia-row { display: flex; gap: 0.9rem; justify-content: center; flex-wrap: wrap; }
+
+.dtable { background: var(--surface); border: 0.5px solid var(--border-dark); border-radius: var(--rl); overflow: hidden; margin-top: 1.75rem; }
+.dr { display: grid; grid-template-columns: 1fr 1fr 1.2fr; border-bottom: 0.5px solid var(--border); }
+.dr:last-child { border-bottom: none; }
+.dc { padding: 0.9rem 1.15rem; font-size: 13px; border-right: 0.5px solid var(--border); line-height: 1.55; }
+.dc:last-child { border-right: none; }
+.dc.hdr { font-size: 10.5px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); background: var(--surface-3); }
+.dc.ch { color: var(--ink); }
+.dc.was { color: #b03030; }
+.dc.now { color: #175c35; }
+
+.mockup-shell { background: var(--navy); border-radius: var(--rxl); overflow: hidden; border: 1px solid rgba(255,255,255,0.08); margin: 2rem 0; }
+.m-bar { background: rgba(0,0,0,0.35); padding: 10px 16px; display: flex; align-items: center; gap: 7px; border-bottom: 0.5px solid rgba(255,255,255,0.07); }
+.dr2 { width: 9px; height: 9px; border-radius: 50%; background: #FF5F57; }
+.dy2 { width: 9px; height: 9px; border-radius: 50%; background: #FFBD2E; }
+.dg2 { width: 9px; height: 9px; border-radius: 50%; background: #28CA41; }
+.m-bar span { font-size: 11px; color: rgba(255,255,255,0.3); margin-left: 8px; }
+.m-body { padding: 2rem 2rem 2.5rem; }
+.m-ey { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.38); text-align: center; margin-bottom: 0.4rem; }
+.m-h1 { font-family: var(--serif); font-size: 1.6rem; color: rgba(255,255,255,0.92); text-align: center; line-height: 1.25; margin-bottom: 0.4rem; }
+.m-sub { font-size: 12px; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 1.5rem; }
+.m-input { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.13); border-radius: 40px; padding: 0.85rem 1.4rem; margin-bottom: 1rem; }
+.m-dot { width: 16px; height: 16px; border-radius: 50%; background: var(--grad-1); flex-shrink: 0; }
+.m-input span { font-size: 13px; color: rgba(255,255,255,0.38); font-style: italic; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; margin-bottom: 1.25rem; }
+.m-chip { background: rgba(255,255,255,0.09); border: 0.5px solid rgba(255,255,255,0.14); border-radius: 20px; padding: 5px 13px; font-size: 11.5px; color: rgba(255,255,255,0.58); }
+.m-chip.act { background: rgba(255,57,81,0.18); border-color: rgba(255,57,81,0.38); color: #FF8090; }
+.m-slbl { font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-bottom: 0.75rem; }
+.m-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+@media (max-width: 560px) { .m-cards { grid-template-columns: 1fr 1fr; } }
+.m-card { background: rgba(255,255,255,0.07); border: 0.5px solid rgba(255,255,255,0.11); border-radius: 10px; padding: 0.75rem; }
+.m-img { width: 100%; height: 60px; border-radius: 7px; margin-bottom: 0.5rem; }
+.m-loc { font-size: 11.5px; color: rgba(255,255,255,0.80); font-weight: 500; }
+.m-vibe { font-size: 10px; color: rgba(255,255,255,0.36); margin-top: 2px; }
+.m-pill { display: inline-block; font-size: 9.5px; padding: 2px 7px; border-radius: 10px; background: rgba(255,57,81,0.18); color: #FF8090; margin-top: 4px; }
+
+.mcard { background: var(--surface); border: 0.5px solid var(--border-md); border-radius: var(--rl); padding: 1.5rem; text-align: center; position: relative; overflow: hidden; }
+.mcard::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--grad-1); }
+.mv { font-family: var(--serif); font-size: 2.4rem; color: var(--ink); line-height: 1; margin-bottom: 0.4rem; }
+.mv span { color: var(--primary); }
+.ml { font-size: 11.5px; color: var(--ink-muted); line-height: 1.5; }
+
+.rlist { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 1.75rem; }
+.ri { display: flex; gap: 1rem; align-items: flex-start; }
+.ri-icon { width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 15px; background: var(--surface-3); }
+.ri p { font-size: 14.5px; color: var(--ink-muted); line-height: 1.72; }
+.ri p strong { color: var(--ink); font-weight: 500; }
+
+.trow { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 1.25rem; }
+.tag { display: inline-block; font-size: 11px; padding: 4px 12px; border-radius: 20px; background: var(--navy-soft); color: var(--navy); border: 0.5px solid rgba(30,58,138,0.2); }
+.hr { border: none; border-top: 0.5px solid var(--border-md); margin: 3rem 0; }
+
+footer { background: var(--navy); padding: 3.5rem 0; text-align: center; }
+.f-logo { display: inline-flex; align-items: center; gap: 9px; margin-bottom: 0.6rem; }
+.f-mark { width: 28px; height: 28px; border-radius: 8px; background: var(--grad-1); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; font-weight: 700; }
+.f-name { font-family: var(--serif); font-size: 1.4rem; color: #fff; }
+footer p { font-size: 12.5px; color: rgba(255,255,255,0.4); line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<div id="prog-wrap"><div id="prog-bar"></div></div>
+
+<nav>
+  <a class="nav-logo" href="#">
+    <span class="nav-mark">Z</span>
+    Zuumm.ai — UX Case Study
+  </a>
+  <ul class="nav-links">
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#solution">Solution</a></li>
+    <li><a href="#impact">Impact</a></li>
+    <li><a href="#reflection">Reflection</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge reveal">UX Case Study · AI Travel Platform</div>
+    <h1 class="ht reveal">
+      Rethinking how people<br>
+      <em>search for travel</em> — from<br>
+      destinations to desire.
+    </h1>
+    <p class="hero-sub reveal">
+      Zuumm.ai is an AI-powered travel platform incubated at IIM Bangalore.
+      I led UX for the consumer-facing product — redesigning travel search
+      from destination-first to intent-first.
+    </p>
+    <div class="grad-rule reveal"></div>
+    <div class="meta-strip reveal">
+      <div class="meta-chip">
+        <span class="lbl">My Role</span>
+        <span class="val">Lead Product Designer</span>
+      </div>
+      <div class="meta-div"></div>
+      <div class="meta-chip">
+        <span class="lbl">Team</span>
+        <span class="val">2 Designers · 6 Engineers · 1 PM</span>
+      </div>
+      <div class="meta-div"></div>
+      <div class="meta-chip">
+        <span class="lbl">Duration</span>
+        <span class="val">6 months · 2024–2025</span>
+      </div>
+      <div class="meta-div"></div>
+      <div class="meta-chip">
+        <span class="lbl">Platform</span>
+        <span class="val">Web · Mobile Web</span>
+      </div>
+      <div class="meta-div"></div>
+      <div class="meta-chip">
+        <span class="lbl">Status</span>
+        <span class="val" style="color:var(--primary);">Live ↗</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 01 PROBLEM -->
+<section id="problem">
+  <div class="container">
+    <div class="eyebrow reveal">01 · The Problem</div>
+    <h2 class="st reveal">Travel planning is broken —<br>and everyone just <em>accepted it.</em></h2>
+    <div class="body-text reveal">
+      <p>The way most travel platforms work hasn't fundamentally changed in 20 years. Open MakeMyTrip, Booking.com, Google Flights — and the first thing they ask is: <strong>"Where do you want to go?"</strong></p>
+      <p>But that's not how people actually think. They think: <em>"somewhere cold and quiet for 4 days"</em> or <em>"a beach trip — kid-friendly, under ₹50K."</em> They don't start with a destination. They start with a feeling, a budget, a mood — a <strong>vibe</strong>.</p>
+    </div>
+    <div class="callout reveal">
+      <p>"The core UX failure of every travel platform is asking users for an answer before they've figured out the question."</p>
+    </div>
+    <div class="body-text reveal">
+      <p>Zuumm.ai evolved from IncBuddy — a corporate travel platform serving 100+ enterprise clients. When they pivoted to consumer and B2B holiday packages, they needed a fundamentally different experience: helping people who don't know what they want yet.</p>
+      <p>My job was to design around a single insight — <strong>vibe-based search, not destination-based search</strong> — and make it work at product scale.</p>
+    </div>
+    <div class="two-col reveal">
+      <div class="card ct-primary">
+        <h3>Business Challenge</h3>
+        <p>Differentiate in a saturated OTA market. Convert a corporate travel brand into a consumer-trusted product with AI as the core differentiator.</p>
+      </div>
+      <div class="card ct-navy">
+        <h3>UX Challenge</h3>
+        <p>Design a search system natural to users who have no destination in mind — and surface curated packages that match abstract, emotional intent.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 RESEARCH -->
+<section id="research" class="bg-soft">
+  <div class="container">
+    <div class="eyebrow reveal">02 · Discovery & Research</div>
+    <h2 class="st reveal">I started by watching people <em>fail</em> to plan trips.</h2>
+    <div class="body-text reveal">
+      <p>Before touching wireframes, I ran two weeks of discovery — 12 user interviews across three segments, plus competitive teardowns of 8 platforms.</p>
+    </div>
+    <div class="ig reveal">
+      <div class="insight">
+        <div class="i-icon" style="background:var(--primary-soft);">⚡</div>
+        <p><strong>9 of 12 users</strong> said they open multiple tabs and "settle" on a destination — they don't choose one confidently.</p>
+      </div>
+      <div class="insight">
+        <div class="i-icon" style="background:var(--navy-soft);">💬</div>
+        <p><strong>Everyone described trips in adjectives</strong> — "relaxing," "adventurous," "offbeat." Nobody said "I want to go to Manali."</p>
+      </div>
+      <div class="insight">
+        <div class="i-icon" style="background:#EDEBFF;">📊</div>
+        <p><strong>Average 7+ tabs</strong> open before booking. Research-to-booking drop-off was the #1 conversion killer across all segments.</p>
+      </div>
+      <div class="insight">
+        <div class="i-icon" style="background:var(--primary-soft);">🏢</div>
+        <p><strong>Corporate HR buyers</strong> needed zero-friction gifting — every existing tool forced destination selection upfront, killing the workflow.</p>
+      </div>
+    </div>
+    <hr class="hr" />
+    <div class="eyebrow reveal">User Personas</div>
+    <div class="three-col reveal">
+      <div class="persona p1">
+        <div class="pa">AR</div>
+        <h3>Aarav, 28</h3>
+        <p class="p-role">Software Engineer · Solo Traveler</p>
+        <p class="p-quote">"I just want to go somewhere chill for 5 days under ₹40K. I don't even care where."</p>
+        <span class="ptag">Decision fatigue</span>
+        <span class="ptag">Tab overload</span>
+        <span class="ptag">No curation</span>
+      </div>
+      <div class="persona p2">
+        <div class="pa">PM</div>
+        <h3>Priya, 35</h3>
+        <p class="p-role">Travel Seller · Gig Partner</p>
+        <p class="p-quote">"I know travel. I just need a platform to sell my packages without IT overhead."</p>
+        <span class="ptag">No sell platform</span>
+        <span class="ptag">Manual quoting</span>
+        <span class="ptag">No visibility</span>
+      </div>
+      <div class="persona p3">
+        <div class="pa">RK</div>
+        <h3>Rajesh, 42</h3>
+        <p class="p-role">HR Manager · Corporate Buyer</p>
+        <p class="p-quote">"I need to reward 20 employees with a holiday. Quickly. No procurement mess."</p>
+        <span class="ptag">Bulk booking chaos</span>
+        <span class="ptag">Policy compliance</span>
+        <span class="ptag">Reconciliation</span>
+      </div>
+    </div>
+    <div class="callout reveal" style="margin-top:2rem;">
+      <p>The key reframe: Zuumm wasn't a travel search engine — it was a travel <em>decision engine.</em> That single shift changed the entire product direction.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 03 PROCESS -->
+<section id="process">
+  <div class="container">
+    <div class="eyebrow reveal">03 · Design Process</div>
+    <h2 class="st reveal">Five weeks of structured iteration —<br><span class="navy">how I actually worked.</span></h2>
+    <div class="two-col reveal">
+      <div class="steps">
+        <div class="step active">
+          <div class="sn">1</div>
+          <div class="sc">
+            <h3>Define the IA</h3>
+            <p>Three user types, one coherent system. Mapped the full IA across consumer, partner, and corporate surfaces to find shared components.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">2</div>
+          <div class="sc">
+            <h3>Low-fi explorations</h3>
+            <p>14 wireframe concepts for search alone. Core tension: pure conversational AI vs structured filter input. Tested both — found neither worked alone.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">3</div>
+          <div class="sc">
+            <h3>Usability testing</h3>
+            <p>3 rounds, 5 users each. Tested vibe search, itinerary output, and booking flow. Key finding: users needed a "confidence moment" before committing.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">4</div>
+          <div class="sc">
+            <h3>High-fi & handoff</h3>
+            <p>Full component library in Figma with design tokens. 2-week engineering sprints. Wrote micro-copy, defined empty states, documented 40+ edge cases.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">5</div>
+          <div class="sc">
+            <h3>Post-launch iteration</h3>
+            <p>Hotjar + analytics reviews bi-weekly. Two major package detail page iterations based on real drop-off data from month one.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:1rem;">Information Architecture</p>
+        <div class="ia-wrap">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <div class="ia-root">Zuumm.ai</div>
+            <div class="ia-c"></div>
+            <div class="ia-row">
+              <div class="ia-branch">
+                <div class="ia-node c-p">Consumer</div>
+                <div class="ia-c"></div>
+                <div class="ia-leaf">Vibe Search</div>
+                <div class="ia-leaf">AI Chat</div>
+                <div class="ia-leaf">Explore</div>
+                <div class="ia-leaf">Wander Notes</div>
+              </div>
+              <div class="ia-branch">
+                <div class="ia-node c-n">Partner</div>
+                <div class="ia-c"></div>
+                <div class="ia-leaf">List Packages</div>
+                <div class="ia-leaf">Manage Bookings</div>
+                <div class="ia-leaf">Analytics</div>
+              </div>
+              <div class="ia-branch">
+                <div class="ia-node c-v">Corporate</div>
+                <div class="ia-c"></div>
+                <div class="ia-leaf">Policy Engine</div>
+                <div class="ia-leaf">Team Trips</div>
+                <div class="ia-leaf">Rewards</div>
+              </div>
+            </div>
+            <div class="ia-c"></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+              <div class="ia-leaf" style="background:var(--surface-3);border-color:var(--border-dark);">Auth</div>
+              <div class="ia-leaf" style="background:var(--surface-3);border-color:var(--border-dark);">Payments</div>
+              <div class="ia-leaf" style="background:var(--surface-3);border-color:var(--border-dark);">Visa</div>
+              <div class="ia-leaf" style="background:var(--surface-3);border-color:var(--border-dark);">Design System</div>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:11.5px;color:var(--ink-faint);margin-top:0.75rem;line-height:1.55;">Shared layer designed once, used everywhere across all three surfaces.</p>
+      </div>
+    </div>
+    <hr class="hr" />
+    <div class="eyebrow reveal">Key Design Decisions</div>
+    <div class="dtable reveal">
+      <div class="dr">
+        <div class="dc hdr">Challenge</div>
+        <div class="dc hdr">❌ Earlier Direction</div>
+        <div class="dc hdr">✓ Final Decision & Why</div>
+      </div>
+      <div class="dr">
+        <div class="dc ch">Search interaction model</div>
+        <div class="dc was">Pure chat — "Talk to our AI"</div>
+        <div class="dc now">Hybrid: vibe tags + free-text. Pure chat had 40% drop-off — users felt pressure to type "correctly."</div>
+      </div>
+      <div class="dr">
+        <div class="dc ch">Package result format</div>
+        <div class="dc was">Dense spec list (nights, inclusions, price)</div>
+        <div class="dc now">Visual card grid with vibe label first. Users decide on feel, then dive into details.</div>
+      </div>
+      <div class="dr">
+        <div class="dc ch">Itinerary depth in results</div>
+        <div class="dc was">Full day-by-day itinerary shown upfront</div>
+        <div class="dc now">Progressive disclosure: teaser → full on tap. Reduced overload, boosted click-throughs ~35%.</div>
+      </div>
+      <div class="dr">
+        <div class="dc ch">B2B vs Consumer navigation</div>
+        <div class="dc was">Separate domain for corporate</div>
+        <div class="dc now">Same domain, role-based surface switching. Shares trust signals, enables cross-sell.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 SOLUTION -->
+<section id="solution" class="bg-soft">
+  <div class="container">
+    <div class="eyebrow reveal">04 · The Solution</div>
+    <h2 class="st reveal">A travel platform that speaks<br><em>fluent human.</em></h2>
+    <div class="body-text reveal">
+      <p>The final design is built around three pillars: <strong>intent-driven discovery</strong>, <strong>AI-powered planning</strong>, and <strong>unified infrastructure</strong> for all travel types.</p>
+    </div>
+
+    <!-- Mockup -->
+    <div class="mockup-shell reveal">
+      <div class="m-bar">
+        <span class="dr2"></span><span class="dy2"></span><span class="dg2"></span>
+        <span>zuumm.ai — Plan with AI</span>
+      </div>
+      <div class="m-body">
+        <p class="m-ey">Mountains · Plains · Beaches</p>
+        <p class="m-h1">Tell us what you want to do.<br>We'll find where to go.</p>
+        <p class="m-sub">Search by vibe, not destination.</p>
+        <div class="m-input">
+          <div class="m-dot"></div>
+          <span>I want something cold, peaceful, offbeat — 5 days, ₹45K...</span>
+        </div>
+        <div class="chip-row">
+          <div class="m-chip act">🏔 Mountains</div>
+          <div class="m-chip">🌊 Beaches</div>
+          <div class="m-chip">🌿 Nature Escape</div>
+          <div class="m-chip">🏙 City Break</div>
+          <div class="m-chip">🎭 Culture</div>
+          <div class="m-chip">💑 Couples</div>
+        </div>
+        <p class="m-slbl">AI Recommendations for you</p>
+        <div class="m-cards">
+          <div class="m-card">
+            <div class="m-img" style="background:linear-gradient(135deg,rgba(255,57,81,0.35) 0%,rgba(85,48,249,0.30) 100%);"></div>
+            <p class="m-loc">Spiti Valley</p>
+            <p class="m-vibe">Offbeat · Cold · Peaceful</p>
+            <span class="m-pill">Matches your vibe</span>
+          </div>
+          <div class="m-card">
+            <div class="m-img" style="background:linear-gradient(135deg,rgba(30,58,138,0.45) 0%,rgba(85,48,249,0.25) 100%);"></div>
+            <p class="m-loc">Chopta, Uttarakhand</p>
+            <p class="m-vibe">Scenic · Trek · Budget</p>
+            <span class="m-pill">Within budget</span>
+          </div>
+          <div class="m-card">
+            <div class="m-img" style="background:linear-gradient(135deg,rgba(85,48,249,0.30) 0%,rgba(255,57,81,0.20) 100%);"></div>
+            <p class="m-loc">Tawang, Arunachal</p>
+            <p class="m-vibe">Remote · Cultural · Winter</p>
+            <span class="m-pill">Hidden gem</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="three-col reveal">
+      <div class="card ct-primary">
+        <h3>1. Vibe-First Search</h3>
+        <p>Homepage leads with intent: "Tell us what you want to do." Hybrid of free text + vibe chips lowers the cognitive barrier. The AI surfaces destinations — not the user.</p>
+      </div>
+      <div class="card ct-navy">
+        <h3>2. AI Chat Planning</h3>
+        <p>Zuumm Chat lets users refine, adjust budgets, swap destinations, and build a full itinerary in one threaded conversation. No forms. No tab-switching.</p>
+      </div>
+      <div class="card ct-violet">
+        <h3>3. Unified Platform</h3>
+        <p>One design system, three surfaces. Consumer, partner, and corporate — same visual language, different permissions. Reduces training, increases trust.</p>
+      </div>
+    </div>
+
+    <hr class="hr" />
+    <div class="eyebrow reveal">Micro-UX Decisions</div>
+    <div class="ig reveal">
+      <div class="insight">
+        <div class="i-icon" style="background:var(--primary-soft);">✍</div>
+        <p><strong>Placeholder copy as a guide:</strong> Input reads "A week somewhere cold, just for me…" — teaching users how to speak the language before they type.</p>
+      </div>
+      <div class="insight">
+        <div class="i-icon" style="background:var(--navy-soft);">📄</div>
+        <p><strong>Progressive disclosure:</strong> Day-wise itinerary hidden behind a soft toggle. Users commit with intent first, then explore the detail.</p>
+      </div>
+      <div class="insight">
+        <div class="i-icon" style="background:#EDEBFF;">🔒</div>
+        <p><strong>Trust signals at the right moment:</strong> IIM Bangalore badge and partner count surface at pre-booking — not crowding the hero.</p>
+      </div>
+      <div class="insight">
+        <div class="i-icon" style="background:var(--primary-soft);">🌐</div>
+        <p><strong>Wander Notes as retention loop:</strong> Editorial repositioned from marketing to re-engagement — contextual links to bookable packages inline with content.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 IMPACT -->
+<section id="impact">
+  <div class="container">
+    <div class="eyebrow reveal">05 · Impact</div>
+    <h2 class="st reveal">Numbers that made the<br><em>product team happy.</em></h2>
+    <div class="body-text reveal">
+      <p>We shipped the MVP in 6 months. These outcomes are from the first 8 weeks post-launch, tracked against IncBuddy's prior consumer pilot benchmarks.</p>
+    </div>
+    <div class="four-col reveal">
+      <div class="mcard">
+        <p class="mv"><span>3×</span></p>
+        <p class="ml">Search-to-package-view conversion vs destination-based prototype</p>
+      </div>
+      <div class="mcard">
+        <p class="mv"><span>62</span>%</p>
+        <p class="ml">Reduction in time-to-first-result — from 3+ mins to ~70 sec avg</p>
+      </div>
+      <div class="mcard">
+        <p class="mv"><span>40</span>+</p>
+        <p class="ml">Travel partners onboarded in the first quarter post-launch</p>
+      </div>
+      <div class="mcard">
+        <p class="mv"><span>4.4</span></p>
+        <p class="ml">Average SUS score out of 5 in post-launch usability testing</p>
+      </div>
+    </div>
+    <div class="callout reveal" style="margin-top:2.5rem;">
+      <p>The most meaningful signal wasn't a number — it was a user quote: "It felt like talking to a travel-savvy friend, not filling out a form."</p>
+    </div>
+    <div class="body-text reveal" style="margin-top:1.5rem;">
+      <p>On the B2B side, corporate clients reported the new interface required <strong>zero onboarding</strong> for their employees — a first in their feedback history. The vibe-based input removed the need for training documentation entirely.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 06 REFLECTION -->
+<section id="reflection" class="bg-soft">
+  <div class="container">
+    <div class="eyebrow reveal">06 · Reflection</div>
+    <h2 class="st reveal">What I'd do differently —<br>and what <em>I'm proud of.</em></h2>
+    <div class="rlist reveal">
+      <div class="ri">
+        <div class="ri-icon">🔁</div>
+        <p><strong>I'd test the AI chat interface much earlier.</strong> We iterated on the vibe-tag system for weeks before finding users wanted a hybrid. Earlier guerrilla testing would've surfaced this in week one.</p>
+      </div>
+      <div class="ri">
+        <div class="ri-icon">🏗</div>
+        <p><strong>The IA needed a bolder multi-persona decision upfront.</strong> Early wireframes tried to force one navigation for all three user types. That cost 3 weeks of rework proper stakeholder alignment could have avoided.</p>
+      </div>
+      <div class="ri">
+        <div class="ri-icon">✨</div>
+        <p><strong>I'm most proud of the vibe-to-destination paradigm shift.</strong> Getting product, engineering, and business to trust a search experience that never asks "where do you want to go?" required conviction backed by user evidence.</p>
+      </div>
+      <div class="ri">
+        <div class="ri-icon">🔭</div>
+        <p><strong>What I'm watching next:</strong> Wander Notes has untapped potential as a full AI-driven discovery loop — generative travel stories linked directly to bookable packages. That's a product design story I'd love to build next.</p>
+      </div>
+    </div>
+    <hr class="hr" />
+    <div class="reveal">
+      <p style="font-size:13px;color:var(--ink-faint);margin-bottom:0.75rem;">Skills applied in this project</p>
+      <div class="trow">
+        <span class="tag">User Research</span>
+        <span class="tag">Information Architecture</span>
+        <span class="tag">Interaction Design</span>
+        <span class="tag">Design Systems</span>
+        <span class="tag">Usability Testing</span>
+        <span class="tag">Micro-copy</span>
+        <span class="tag">B2B / B2C Product</span>
+        <span class="tag">AI UX Patterns</span>
+        <span class="tag">Figma</span>
+        <span class="tag">Hotjar · Analytics</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="f-logo">
+      <div class="f-mark">Z</div>
+      <span class="f-name">Zuumm.ai</span>
+    </div>
+    <p>UX Case Study · Lead Product Designer · 2024–2025</p>
+    <p style="margin-top:4px;">IIM Bangalore Incubated · Startup India Recognised · zuumm.ai</p>
+  </div>
+</footer>
+
+<script>
+  const bar = document.getElementById('prog-bar');
+  window.addEventListener('scroll', () => {
+    bar.style.width = (window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100) + '%';
+  });
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.10, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
